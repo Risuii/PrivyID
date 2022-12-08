@@ -20,3 +20,7 @@ Silahkan Import File Json yang ada pada folder Postman ke Postman
 - List-Of-Cake : /cakes (method GET)
 - Update-Cake : /cakes/:id (method PATCH)
 - Delete-Cake : /cakes/:id (method DELETE)
+
+## Point Test Yang Belum Dapat di Selesaikan
+- Provide unit test on your project
+- Running in docker contain
