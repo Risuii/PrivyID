@@ -109,6 +109,10 @@ func (cu *cakeUseCaseImpl) UpdateCake(ctx context.Context, id int64, params mode
 func (cu *cakeUseCaseImpl) DeleteCake(ctx context.Context, id int64) response.Response {
 
 	err := cu.repository.Delete(ctx, id)
+	if err == exception.ErrNotFound {
+		return response.Error(response.StatusNotFound, exception.ErrNotFound)
+	}
+
 	if err != nil {
 		return response.Error(response.StatusInternalServerError, exception.ErrInternalServer)
 	}
