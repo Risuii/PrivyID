@@ -31,13 +31,14 @@ func NewCakeUseCase(repo CakeRepository) CakeUseCase {
 }
 
 func (cu *cakeUseCaseImpl) AddCakes(ctx context.Context, params models.CheeseCake) response.Response {
-	var cakes models.CheeseCake
-
-	cakes.Title = params.Title
-	cakes.Description = params.Description
-	cakes.Rating = params.Rating
-	cakes.Image = params.Image
-	cakes.CreatedAt = time.Now()
+	cakes := models.CheeseCake{
+		ID:          params.ID,
+		Title:       params.Title,
+		Description: params.Description,
+		Rating:      params.Rating,
+		Image:       params.Image,
+		CreatedAt:   time.Now(),
+	}
 
 	cakeID, err := cu.repository.Create(ctx, cakes)
 	if err != nil {
@@ -46,7 +47,7 @@ func (cu *cakeUseCaseImpl) AddCakes(ctx context.Context, params models.CheeseCak
 
 	cakes.ID = int(cakeID)
 
-	return response.Success(response.StatusOK, cakes)
+	return response.Success(response.StatusCreated, cakes)
 }
 
 func (cu *cakeUseCaseImpl) DetailCakes(ctx context.Context, id int64) response.Response {

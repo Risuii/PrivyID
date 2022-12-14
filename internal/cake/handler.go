@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 
 	"privyID/helpers/response"
@@ -13,12 +14,14 @@ import (
 )
 
 type CakeHandler struct {
-	UseCase CakeUseCase
+	Validate *validator.Validate
+	UseCase  CakeUseCase
 }
 
-func NewCakeHandler(router *mux.Router, usecase CakeUseCase) {
+func NewCakeHandler(router *mux.Router, validate *validator.Validate, usecase CakeUseCase) {
 	handler := &CakeHandler{
-		UseCase: usecase,
+		Validate: validate,
+		UseCase:  usecase,
 	}
 
 	router.HandleFunc("/cakes", handler.AddCakes).Methods(http.MethodPost)
@@ -38,6 +41,13 @@ func (handler *CakeHandler) AddCakes(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		res = response.Error(response.StatusUnprocessableEntity, err)
+		res.JSON(w)
+		return
+	}
+
+	err = handler.Validate.StructCtx(ctx, userInput)
+	if err != nil {
+		res = response.Error(response.StatusBadRequest, err)
 		res.JSON(w)
 		return
 	}
@@ -78,6 +88,13 @@ func (handler *CakeHandler) UpdateCake(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		res = response.Error(response.StatusUnprocessableEntity, err)
+		res.JSON(w)
+		return
+	}
+
+	err = handler.Validate.StructCtx(ctx, userInput)
+	if err != nil {
+		res = response.Error(response.StatusBadRequest, err)
 		res.JSON(w)
 		return
 	}

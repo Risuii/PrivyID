@@ -22,6 +22,5 @@ Silahkan Import File Json yang ada pada folder Postman ke Postman
 - Delete-Cake : /cakes/:id (method DELETE)
 
 ## Point Test Yang Belum Dapat di Selesaikan
-- Applied request validation
 - Provide unit test on your project
 - Running in docker contain
