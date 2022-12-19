@@ -28,17 +28,58 @@ func (_m *MockCake) AddCakes(ctx context.Context, params models.CheeseCake) resp
 }
 
 func (_m *MockCake) DetailCakes(ctx context.Context, id int64) response.Response {
-	return nil
+	ret := _m.Called(ctx, id)
+
+	var r0 response.Response
+
+	if rf, ok := ret.Get(0).(func(context.Context, int64) response.Response); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(response.Response)
+		}
+	}
+
+	return r0
 }
 
 func (_m *MockCake) ListCakes() response.Response {
-	return nil
+	ret := _m.Called()
+
+	var r0 response.Response
+	if rf, ok := ret.Get(0).(func() response.Response); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(response.Response)
+		}
+	}
+
+	return r0
 }
 
 func (_m *MockCake) UpdateCake(ctx context.Context, id int64, params models.CheeseCake) response.Response {
-	return nil
+	ret := _m.Called(ctx, id, params)
+
+	var r0 response.Response
+	if rf, ok := ret.Get(0).(func(context.Context, int64, models.CheeseCake) response.Response); ok {
+		r0 = rf(ctx, id, params)
+	}
+
+	return r0
 }
 
 func (_m *MockCake) DeleteCake(ctx context.Context, id int64) response.Response {
-	return nil
+	ret := _m.Called(ctx, id)
+
+	var r0 response.Response
+	if rf, ok := ret.Get(0).(func(context.Context, int64) response.Response); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(response.Response)
+		}
+	}
+
+	return r0
 }
