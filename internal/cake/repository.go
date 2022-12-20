@@ -62,7 +62,7 @@ func (repo *cakeRepositoryImpl) Create(ctx context.Context, params models.Cheese
 func (repo *cakeRepositoryImpl) FindByID(ctx context.Context, id int64) (models.CheeseCake, error) {
 	var cake models.CheeseCake
 
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE id = ?`, repo.tableName)
+	query := fmt.Sprintf(`SELECT id, title, description, rating, image, created_at, update_at FROM %s WHERE id = ?`, repo.tableName)
 	stmt, err := repo.db.PrepareContext(ctx, query)
 	if err != nil {
 		log.Println(err)
@@ -92,7 +92,7 @@ func (repo *cakeRepositoryImpl) FindByID(ctx context.Context, id int64) (models.
 func (repo *cakeRepositoryImpl) FindAll() ([]models.CheeseCake, error) {
 	var cakes []models.CheeseCake
 
-	rows, err := repo.db.Query(fmt.Sprintf(`SELECT * FROM %s ORDER BY rating DESC, title ASC`, repo.tableName))
+	rows, err := repo.db.Query(fmt.Sprintf(`SELECT id, title, description, rating, image, created_at, update_at FROM %s ORDER BY rating DESC, title ASC`, repo.tableName))
 	if err != nil {
 		log.Println(err)
 		return cakes, exception.ErrInternalServer
