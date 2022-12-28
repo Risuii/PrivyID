@@ -374,7 +374,7 @@ func TestCakeHandler_DeleteCake(t *testing.T) {
 			t.Error(err)
 			return
 		}
-		fmt.Println("INI DATA", rb.Data)
+
 		assert.Equal(t, response.StatusInternalServerError, rb.Status, fmt.Sprintf("should be %s", response.StatusInternalServerError))
 		assert.NotNil(t, rb.Data, "should be nil")
 
