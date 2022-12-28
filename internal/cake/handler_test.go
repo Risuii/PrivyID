@@ -222,6 +222,7 @@ func TestCakeHandler_ListCakes(t *testing.T) {
 }
 
 func TestCakeHandler_UpdateCake(t *testing.T) {
+
 	t.Run("Update Cake Success", func(t *testing.T) {
 		mockData := models.CheeseCake{
 			ID:          1,
