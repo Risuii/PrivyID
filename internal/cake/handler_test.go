@@ -222,55 +222,55 @@ func TestCakeHandler_ListCakes(t *testing.T) {
 }
 
 func TestCakeHandler_UpdateCake(t *testing.T) {
-	// t.Run("Update Cake Success", func(t *testing.T) {
-	// 	mockData := models.CheeseCake{
-	// 		ID:          1,
-	// 		Title:       "test-1",
-	// 		Description: "hanya untuk test",
-	// 		Rating:      1,
-	// 		Image:       "ini gambar test",
-	// 		CreatedAt:   time.Time{},
-	// 		UpdateAt:    time.Time{},
-	// 	}
+	t.Run("Update Cake Success", func(t *testing.T) {
+		mockData := models.CheeseCake{
+			ID:          1,
+			Title:       "test-1",
+			Description: "hanya untuk test",
+			Rating:      1,
+			Image:       "ini gambar test",
+			CreatedAt:   time.Time{},
+			UpdateAt:    time.Time{},
+		}
 
-	// 	validateTest := validator.New()
-	// 	resp := response.Success(response.StatusOK, mock.AnythingOfType("models.CheeseCake"))
-	// 	cakeUseCase := new(mocks.MockCake)
-	// 	cakeUseCase.On("UpdateCake", mock.Anything, mock.AnythingOfType("int64"), mock.AnythingOfType("models.CheeseCake")).Return(resp)
+		validateTest := validator.New()
+		resp := response.Success(response.StatusOK, mock.AnythingOfType("models.CheeseCake"))
+		cakeUseCase := new(mocks.MockCake)
+		cakeUseCase.On("UpdateCake", mock.Anything, mock.AnythingOfType("int64"), mock.AnythingOfType("models.CheeseCake")).Return(resp)
 
-	// 	reqData, err := json.Marshal(mockData)
-	// 	if err != nil {
-	// 		t.Errorf("Error marshaling data: %v", err)
-	// 		return
-	// 	}
+		reqData, err := json.Marshal(mockData)
+		if err != nil {
+			t.Errorf("Error marshaling data: %v", err)
+			return
+		}
 
-	// 	CakeHandlerTest := CakeHandler{
-	// 		Validate: validateTest,
-	// 		UseCase:  cakeUseCase,
-	// 	}
+		CakeHandlerTest := CakeHandler{
+			Validate: validateTest,
+			UseCase:  cakeUseCase,
+		}
 
-	// 	r := httptest.NewRequest(http.MethodPatch, "/just/for/testing/1", bytes.NewReader(reqData))
-	// 	recorder := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodPatch, "/just/for/testing/1", bytes.NewReader(reqData))
+		recorder := httptest.NewRecorder()
 
-	// 	handler := http.HandlerFunc(CakeHandlerTest.UpdateCake)
-	// 	handler.ServeHTTP(recorder, r)
+		handler := http.HandlerFunc(CakeHandlerTest.UpdateCake)
+		handler.ServeHTTP(recorder, r)
 
-	// 	rb := response.ResponseImpl{}
+		rb := response.ResponseImpl{}
 
-	// 	if r.Body == nil {
-	// 		t.Errorf("Error decoding response: request body is nil")
-	// 		return
-	// 	}
-	// 	if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
-	// 		t.Errorf("Error decoding response: %v", err)
-	// 		return
-	// 	}
+		if r.Body == nil {
+			t.Errorf("Error decoding response: request body is nil")
+			return
+		}
+		if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
+			t.Errorf("Error decoding response: %v", err)
+			return
+		}
 
-	// 	assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should have status %s", response.StatusOK))
-	// 	assert.NotNil(t, rb.Data, "should be nil")
+		assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should have status %s", response.StatusOK))
+		assert.NotNil(t, rb.Data, "should be nil")
 
-	// 	cakeUseCase.AssertExpectations(t)
-	// })
+		cakeUseCase.AssertExpectations(t)
+	})
 
 	t.Run("Update Cake Error", func(t *testing.T) {
 		type invalidReq struct {
