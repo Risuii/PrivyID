@@ -58,7 +58,9 @@ func (_m *CakeRepository) FindAll() ([]models.CheeseCake, error) {
 	if rf, ok := ret.Get(0).(func() []models.CheeseCake); ok {
 		r0 = rf()
 	} else {
-		r0 = ret.Get(0).([]models.CheeseCake)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.CheeseCake)
+		}
 	}
 
 	var r1 error
@@ -71,12 +73,12 @@ func (_m *CakeRepository) FindAll() ([]models.CheeseCake, error) {
 	return r0, r1
 }
 
-func (_m *CakeRepository) Update(ctx context.Context, id int64, cake models.CheeseCake) error {
-	ret := _m.Called(ctx, id, cake)
+func (_m *CakeRepository) Update(ctx context.Context, id int64, _a2 models.CheeseCake) error {
+	ret := _m.Called(ctx, id, _a2)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, int64, models.CheeseCake) error); ok {
-		r0 = rf(ctx, id, cake)
+		r0 = rf(ctx, id, _a2)
 	} else {
 		r0 = ret.Error(0)
 	}
