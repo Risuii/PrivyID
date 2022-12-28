@@ -234,7 +234,7 @@ func TestCakeHandler_UpdateCake(t *testing.T) {
 		}
 
 		validateTest := validator.New()
-		resp := response.Success(response.StatusOK, mock.AnythingOfType("models.CheeseCake"))
+		resp := response.Success(response.StatusOK, models.CheeseCake{})
 		cakeUseCase := new(mocks.MockCake)
 		cakeUseCase.On("UpdateCake", mock.Anything, mock.AnythingOfType("int64"), mock.AnythingOfType("models.CheeseCake")).Return(resp)
 
@@ -261,7 +261,7 @@ func TestCakeHandler_UpdateCake(t *testing.T) {
 			t.Errorf("Error decoding response: request body is nil")
 			return
 		}
-		if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
+		if err := json.NewDecoder(recorder.Body).Decode(&rb); err != nil {
 			t.Errorf("Error decoding response: %v", err)
 			return
 		}
