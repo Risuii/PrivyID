@@ -52,8 +52,6 @@ func TestCakeHandler_AddCakes(t *testing.T) {
 		r := httptest.NewRequest(http.MethodPost, "/just/for/testing", bytes.NewReader(newAddCakes))
 		recorder := httptest.NewRecorder()
 
-		fmt.Println("INI FMT", r)
-
 		handler := http.HandlerFunc(cakeHandler.AddCakes)
 		handler.ServeHTTP(recorder, r)
 
@@ -121,7 +119,7 @@ func TestCakeHandler_DetailCakes(t *testing.T) {
 		resp := response.Success(response.StatusOK, newCake)
 
 		cakeUseCaseTest := new(mocks.MockCake)
-		cakeUseCaseTest.On("DetailCakes", mock.Anything, mock.Anything).Return(resp)
+		cakeUseCaseTest.On("DetailCakes", mock.Anything, mock.AnythingOfType("int64")).Return(resp)
 
 		CakeHandler := CakeHandler{
 			UseCase: cakeUseCaseTest,
@@ -139,9 +137,6 @@ func TestCakeHandler_DetailCakes(t *testing.T) {
 			t.Error(err)
 			return
 		}
-
-		// rb.Data = newCake
-		// rb.Status = response.StatusOK
 
 		assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should be status '%s'", response.StatusOK))
 		assert.NotNil(t, rb.Data, "should not be nil")
@@ -226,50 +221,163 @@ func TestCakeHandler_ListCakes(t *testing.T) {
 	})
 }
 
-// func TestCakeHandler_UpdateCake(t *testing.T) {
-// 	t.Run("Update Cake Success", func(t *testing.T) {
-// 		newCake := models.CheeseCake{
-// 			ID:          0,
-// 			Title:       "test-1",
-// 			Description: "hanya untuk test",
-// 			Rating:      1,
-// 			Image:       "ini gambar test",
-// 		}
+func TestCakeHandler_UpdateCake(t *testing.T) {
+	// t.Run("Update Cake Success", func(t *testing.T) {
+	// 	mockData := models.CheeseCake{
+	// 		ID:          1,
+	// 		Title:       "test-1",
+	// 		Description: "hanya untuk test",
+	// 		Rating:      1,
+	// 		Image:       "ini gambar test",
+	// 		CreatedAt:   time.Time{},
+	// 		UpdateAt:    time.Time{},
+	// 	}
 
-// 		resp := response.Success(response.StatusOK, newCake)
+	// 	validateTest := validator.New()
+	// 	resp := response.Success(response.StatusOK, mock.AnythingOfType("models.CheeseCake"))
+	// 	cakeUseCase := new(mocks.MockCake)
+	// 	cakeUseCase.On("UpdateCake", mock.Anything, mock.AnythingOfType("int64"), mock.AnythingOfType("models.CheeseCake")).Return(resp)
 
-// 		validate := validator.New()
-// 		cakeUseCaseTest := new(mocks.MockCake)
-// 		cakeUseCaseTest.On("UpdateCake", mock.Anything, int64(0), mock.Anything).Return(resp)
+	// 	reqData, err := json.Marshal(mockData)
+	// 	if err != nil {
+	// 		t.Errorf("Error marshaling data: %v", err)
+	// 		return
+	// 	}
 
-// 		newCakeRes, err := json.Marshal(newCake)
-// 		if err != nil {
-// 			log.Println(err)
-// 			t.Error(err)
-// 			return
-// 		}
+	// 	CakeHandlerTest := CakeHandler{
+	// 		Validate: validateTest,
+	// 		UseCase:  cakeUseCase,
+	// 	}
 
-// 		cakeHandlerTest := CakeHandler{
-// 			Validate: validate,
-// 			UseCase:  cakeUseCaseTest,
-// 		}
+	// 	r := httptest.NewRequest(http.MethodPatch, "/just/for/testing/1", bytes.NewReader(reqData))
+	// 	recorder := httptest.NewRecorder()
 
-// 		r := httptest.NewRequest(http.MethodPatch, "/just/for/testing", bytes.NewReader(newCakeRes))
-// 		recorder := httptest.NewRecorder()
+	// 	handler := http.HandlerFunc(CakeHandlerTest.UpdateCake)
+	// 	handler.ServeHTTP(recorder, r)
 
-// 		handler := http.HandlerFunc(cakeHandlerTest.UpdateCake)
-// 		handler.ServeHTTP(recorder, r)
+	// 	rb := response.ResponseImpl{}
 
-// 		rb := response.ResponseImpl{}
-// 		if err := json.NewDecoder(recorder.Body).Decode(&rb); err != nil {
-// 			log.Println(err)
-// 			t.Error(err)
-// 			return
-// 		}
+	// 	if r.Body == nil {
+	// 		t.Errorf("Error decoding response: request body is nil")
+	// 		return
+	// 	}
+	// 	if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
+	// 		t.Errorf("Error decoding response: %v", err)
+	// 		return
+	// 	}
 
-// 		assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should be status '%s'", response.StatusOK))
-// 		assert.NotNil(t, rb.Data, "should be nil")
+	// 	assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should have status %s", response.StatusOK))
+	// 	assert.NotNil(t, rb.Data, "should be nil")
 
-// 		cakeUseCaseTest.AssertExpectations(t)
-// 	})
-// }
+	// 	cakeUseCase.AssertExpectations(t)
+	// })
+
+	t.Run("Update Cake Error", func(t *testing.T) {
+		type invalidReq struct {
+			Data string
+		}
+
+		data := invalidReq{
+			Data: "error",
+		}
+
+		validate := validator.New()
+		cakeUseCase := new(mocks.MockCake)
+
+		reqData, err := json.Marshal(data)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
+		cakeHandler := CakeHandler{
+			Validate: validate,
+			UseCase:  cakeUseCase,
+		}
+
+		r := httptest.NewRequest(http.MethodPatch, "/just/for/testing", bytes.NewReader(reqData))
+		recorder := httptest.NewRecorder()
+
+		handler := http.HandlerFunc(cakeHandler.UpdateCake)
+		handler.ServeHTTP(recorder, r)
+
+		rb := response.ResponseImpl{}
+		if err := json.NewDecoder(recorder.Body).Decode(&rb); err != nil {
+			t.Error(r)
+			return
+		}
+
+		assert.Equal(t, response.StatusBadRequest, rb.Status, "Should be bad request")
+		assert.Nil(t, rb.Data, "Should be nil")
+
+		cakeUseCase.AssertExpectations(t)
+	})
+}
+
+func TestCakeHandler_DeleteCake(t *testing.T) {
+	t.Run("Delete Cake Success", func(t *testing.T) {
+		type testReq struct {
+			msg string
+		}
+
+		data := testReq{
+			msg: "Sueccess Delete Data",
+		}
+
+		resp := response.Success(response.StatusOK, data)
+
+		cakeUseCase := new(mocks.MockCake)
+		cakeUseCase.On("DeleteCake", mock.Anything, mock.AnythingOfType("int64")).Return(resp)
+
+		cakeHandler := CakeHandler{
+			UseCase: cakeUseCase,
+		}
+
+		r := httptest.NewRequest(http.MethodDelete, "/just/for/testing", nil)
+		recorder := httptest.NewRecorder()
+
+		handler := http.HandlerFunc(cakeHandler.DeleteCake)
+		handler.ServeHTTP(recorder, r)
+
+		rb := response.ResponseImpl{}
+
+		if err := json.NewDecoder(recorder.Body).Decode(&rb); err != nil {
+			t.Error(err)
+			return
+		}
+
+		assert.Equal(t, response.StatusOK, rb.Status, fmt.Sprintf("should be %s", response.StatusOK))
+		assert.NotNil(t, rb.Data, "should be not nil")
+
+		cakeUseCase.AssertExpectations(t)
+	})
+
+	t.Run("Delete Cake Error", func(t *testing.T) {
+
+		resp := response.Success(response.StatusInternalServerError, assert.AnError)
+		cakeUseCase := new(mocks.MockCake)
+		cakeUseCase.On("DeleteCake", mock.Anything, mock.AnythingOfType("int64")).Return(resp)
+
+		cakeHandler := CakeHandler{
+			UseCase: cakeUseCase,
+		}
+
+		r := httptest.NewRequest(http.MethodDelete, "/just/for/testing", nil)
+		recorder := httptest.NewRecorder()
+
+		handler := http.HandlerFunc(cakeHandler.DeleteCake)
+		handler.ServeHTTP(recorder, r)
+
+		rb := response.ResponseImpl{}
+
+		if err := json.NewDecoder(recorder.Body).Decode(&rb); err != nil {
+			t.Error(err)
+			return
+		}
+		fmt.Println("INI DATA", rb.Data)
+		assert.Equal(t, response.StatusInternalServerError, rb.Status, fmt.Sprintf("should be %s", response.StatusInternalServerError))
+		assert.NotNil(t, rb.Data, "should be nil")
+
+		cakeUseCase.AssertExpectations(t)
+	})
+}

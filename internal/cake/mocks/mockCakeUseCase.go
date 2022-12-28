@@ -59,11 +59,11 @@ func (_m *MockCake) ListCakes() response.Response {
 }
 
 func (_m *MockCake) UpdateCake(ctx context.Context, id int64, params models.CheeseCake) response.Response {
-	ret := _m.Called(ctx, id, params)
+	ret := _m.Called(ctx, int64(1), params)
 
 	var r0 response.Response
 	if rf, ok := ret.Get(0).(func(context.Context, int64, models.CheeseCake) response.Response); ok {
-		r0 = rf(ctx, id, params)
+		r0 = rf(ctx, int64(1), params)
 	}
 
 	return r0
